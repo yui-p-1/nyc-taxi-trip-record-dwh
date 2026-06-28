@@ -13,19 +13,19 @@ This project is a Dataform-based data warehouse on BigQuery for NYC Taxi data.
 - marts: BI-ready analytical tables
 
 ## Directory Structure
-definitions/
-staging/
-marts/
-includes/
-assertions/
+- definitions/
+- staging/
+- marts/
+- includes/
+- assertions/
 
 ## Execution Environment
-Production: main
-Development: feature/*
+- Production: main
+- Development: feature/*
 
 ## Naming Conventions
-stg_: Staging
-mart_: Data Mart
+- stg_: Staging
+- mart_: Data Mart
 
 ## Data Source
 https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
