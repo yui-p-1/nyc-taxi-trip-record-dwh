@@ -1,0 +1,44 @@
+config {
+  type: 'table',
+  schema: 'dwh',
+  name: 'dim_date',
+  description: 'Calendar dimension table (1 row = 1 date)',
+  columns: {
+    date_key: 'Surrogate key for the date in YYYYMMDD format',
+    date: 'Calendar date',
+    year: 'Calendar year',
+    month: 'Calendar month number (1-12)',
+    day: 'Day of the month (1-31)',
+    quarter: 'Calendar quarter (1-4)',
+    week_of_year: 'Week number of the year',
+    day_of_week: 'Day of the week number where 1 = Sunday and 7 = Saturday',
+    day_name: 'Full name of the day of the week',
+    is_weekend: 'Indicates whether the date falls on a weekend',
+  }
+}
+
+WITH date_spine AS (
+  SELECT
+    date
+  FROM
+    UNNEST(
+      GENERATE_DATE_ARRAY('2009-01-01', '2030-12-31')
+    ) AS date
+)
+SELECT
+  CAST(FORMAT_DATE('%Y%m%d', date) AS INT64) AS date_key, -- factと合わせる
+  date,
+  EXTRACT(YEAR FROM date) AS year,
+  EXTRACT(MONTH FROM date) AS month,
+  EXTRACT(DAY FROM date) AS day,
+  EXTRACT(QUARTER FROM date) AS quarter,
+  EXTRACT(WEEK FROM date) AS week_of_year,
+  EXTRACT(DAYOFWEEK FROM date) AS day_of_week,  -- 1=Sunday
+  FORMAT_DATE('%A', date) AS day_name,
+  CASE
+    WHEN EXTRACT(DAYOFWEEK FROM date) IN (1,7)
+      THEN TRUE
+    ELSE FALSE
+  END AS is_weekend
+FROM
+  date_spine
