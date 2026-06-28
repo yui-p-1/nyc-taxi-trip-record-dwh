@@ -1,27 +1,34 @@
 # NYC Trip Record Data Project
 
 ## Overview
-This project is a Dataform project that aggregates nyc Taxi data on BigQuery
-and builds a data for BI tools.
+This project is a Dataform-based data warehouse on BigQuery for NYC Taxi data.
 
 ## Architecture
--warehouse: BigQuery
--orchestration: Cloud Scheduler + Dataform
+- Warehouse: BigQuery
+- Orchestration: Dataform + Cloud Scheduler
+- BI: Tableau Public
+
+## Data Model
+- staging: raw cleaning and standardization
+- marts: BI-ready analytical tables
 
 ## Directory Structure
--defenitions/
--staging/
--marts/
--includes/
--assertions/
+definitions/
+staging/
+marts/
+includes/
+assertions/
 
 ## Execution Environment
--Production: main
--Development: feature/*
+Production: main
+Development: feature/*
 
 ## Naming Conventions
--stg_: Staging
--mart_: Data Mart
+stg_: Staging
+mart_: Data Mart
 
-## Source
+## Data Source
 https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
+
+## Dashboard
+https://public.tableau.com/app/profile/yui.hosono6688/viz/NYCTaxiDashboard_17756464185300/NYCTaxiDashboard
