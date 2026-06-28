@@ -1,4 +1,4 @@
-# nyc Trip Record Data Project
+# NYC Trip Record Data Project
 
 ## Overview
 This project is a Dataform project that aggregates nyc Taxi data on BigQuery
