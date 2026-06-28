@@ -1,0 +1,34 @@
+config {
+  type: 'table',
+  schema: 'staging',
+  name: 'stg_taxi_zone',
+  description: 'NYC Taxi Zone dimension',
+  columns: {
+    location_id: 'Unique identifier for the TLC taxi zone',
+    borough: 'NYC borough where the taxi zone is located',
+    zone: 'Name of the TLC taxi zone',
+    service_zone: 'Service zone category assigned by the TLC',
+    longitude: 'Longitude of the taxi zone centroid in decimal degrees',
+    latitude: 'Latitude of the taxi zone centroid in decimal degrees',
+  }
+}
+
+WITH temp_geo AS (
+  SELECT
+    CAST(Location_ID AS INT64) AS location_id,
+    ST_X(ST_CENTROID(ST_GEOGFROMTEXT(Shape_Geometry))) AS longitude,
+    ST_Y(ST_CENTROID(ST_GEOGFROMTEXT(Shape_Geometry))) AS latitude
+  FROM
+    ${ref('lookup_nyc_taxi_zones')}  
+)
+SELECT
+  CAST(l_t_z_l.LocationID AS INT64) AS location_id,
+  CAST(l_t_z_l.Borough AS STRING) AS borough,
+  CAST(l_t_z_l.Zone AS STRING) AS zone,
+  CAST(l_t_z_l.service_zone AS STRING) AS service_zone,
+  t_g.longitude,
+  t_g.latitude
+FROM
+  ${ref('lookup_taxi_zone_lookup')} AS l_t_z_l
+  LEFT JOIN temp_geo AS t_g
+    ON l_t_z_l.LocationID = t_g.location_id
