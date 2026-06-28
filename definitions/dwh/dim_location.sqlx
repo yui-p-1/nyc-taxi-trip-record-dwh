@@ -1,0 +1,24 @@
+config {
+  type: 'table',
+  schema: 'dwh',
+  name: 'dim_location',
+  description: 'NYC Taxi Zone dimension',
+  columns: {
+    location_id: 'Unique identifier for the TLC taxi zone',
+    borough: 'NYC borough where the taxi zone is located',
+    zone: 'Name of the TLC taxi zone',
+    service_zone: 'Service zone category assigned by the TLC',
+    longitude: 'Longitude of the taxi zone centroid in decimal degrees',
+    latitude: 'Latitude of the taxi zone centroid in decimal degrees'
+  }
+}
+
+SELECT
+  location_id,
+  borough,
+  zone,
+  service_zone,
+  longitude,
+  latitude
+FROM
+  ${ref('stg_taxi_zone')}

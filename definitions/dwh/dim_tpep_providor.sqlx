@@ -1,0 +1,19 @@
+config {
+  type: 'table',
+  schema: 'dwh',
+  name: 'dim_tpep_providor',
+  description: 'Vendor dimension table for taxi providers',
+  columns: {
+    vendor_id: 'Unique identifier of taxi vendor',
+    vendor_name: 'Short vendor name',
+    vendor_full_name: 'Official vendor company name'
+  }
+}
+
+SELECT 1 AS vendor_id, 'CMT' AS vendor_name, 'Creative Mobile Technologies, LLC' AS vendor_full_name
+UNION ALL
+SELECT 2, "Curb", "Curb Mobility, LLC"
+UNION ALL
+SELECT 6, "Myle", "Myle Technologies Inc"
+UNION ALL
+SELECT 7, "Helix", "Helix"

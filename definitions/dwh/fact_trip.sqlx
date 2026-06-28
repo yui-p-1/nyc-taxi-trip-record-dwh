@@ -1,0 +1,62 @@
+config {
+  schema: 'dwh',
+  type: 'incremental',
+  uniqueKey: ['trip_id'],
+  partitionBy: 'DATE(pickup_datetime)',
+  name: 'fact_trip',
+  description: '1 row = 1 yellow taxi trip',
+  columns: {
+    trip_id: 'Unique identifier for the taxi trip',
+    pickup_datetime: 'Timestamp when the taximeter was engaged',
+    dropoff_datetime: 'Timestamp when the taximeter was disengaged',
+    pickup_date_key: 'Foreign key to dim_date representing the pickup date (YYYYMMDD)',
+    dropoff_date_key: 'Foreign key to dim_date representing the dropoff date (YYYYMMDD)',
+    vendor_id: 'Identifier of the Trip Record Data Program (TPEP) provider',
+    rate_code_id: 'Foreign key to the rate code dimension',
+    pickup_location_id: 'Foreign key to dim_location representing the pickup taxi zone',
+    dropoff_location_id: 'Foreign key to dim_location representing the dropoff taxi zone',
+    payment_type: 'Code indicating how the passenger paid for the trip',
+    passenger_count: 'Number of passengers in the vehicle',
+    trip_distance: 'Trip distance in miles',
+    fare_amount: 'Time-and-distance fare calculated by the meter',
+    extras_and_surcharges: 'Additional extras and surcharges applied to the trip',
+    metered_rate_tax: 'Tax automatically applied based on the metered rate',
+    tip_amount: 'Tip amount paid by the passenger',
+    tolls_amount: 'Total toll charges during the trip',
+    improvement_surcharge: 'Improvement surcharge assessed at the start of the trip',
+    congestion_surcharge: 'Congestion surcharge applied to the trip',
+    airport_fee: 'Airport pickup fee for LaGuardia or JFK',
+    cbd_congestion_fee: 'Per-trip charge for MTA Congestion Relief Zone',
+    total_amount: 'Total amount charged to the passenger',
+  }
+}
+
+SELECT
+  trip_id,
+  -- event datetime
+  pickup_datetime,
+  dropoff_datetime,
+  -- date keys(for analysis)
+  FORMAT_DATE('%Y%m%d', DATE(pickup_datetime)) AS pickup_date_key,
+  FORMAT_DATE('%Y%m%d', DATE(dropoff_datetime)) AS dropoff_date_key,
+  -- dimension keys
+  vendor_id,
+  rate_code_id,
+  pickup_location_id,
+  dropoff_location_id,
+  payment_type,
+  -- measures
+  passenger_count,
+  trip_distance,
+  fare_amount,
+  extras_and_surcharges,
+  metered_rate_tax,
+  tip_amount,
+  tolls_amount,
+  improvement_surcharge,
+  congestion_surcharge,
+  airport_fee,
+  cbd_congestion_fee,
+  total_amount
+FROM
+  ${ref('stg_yellow_trip')}
