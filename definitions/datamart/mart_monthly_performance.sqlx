@@ -1,0 +1,31 @@
+config {
+  type: 'incremental',
+  uniqueKey: ['month_date'],
+  schema: 'datamart',
+  name: 'mart_monthly_performance',
+  description: 'Monthly performance summary for executive dashboard',
+  columns: {
+    month_date: 'First day of the month representing the aggregation period',
+    total_trips: 'Total number of taxi trips in the month',
+    total_revenue: 'Total revenue generated from taxi trips in the month',
+    total_distance: 'Total distance traveled by taxis in miles during the month',
+    revenue_per_trip: 'Average revenue generated per trip',
+    revenue_per_mile: 'Average revenue generated per mile traveled',
+    avg_tip_rate: 'Average tip rate calculated as total tip amount divided by total fare amount',
+  }
+}
+
+SELECT
+  DATE_TRUNC(DATE(pickup_datetime), MONTH) AS month_date,
+  COUNT(*) AS total_trips,
+  SUM(total_amount) AS total_revenue,
+  SUM(trip_distance) AS total_distance,
+  SAFE_DIVIDE(SUM(total_amount), COUNT(*)) AS revenue_per_trip,
+  SAFE_DIVIDE(SUM(total_amount), SUM(trip_distance)) AS revenue_per_mile,
+  SAFE_DIVIDE(SUM(tip_amount), SUM(fare_amount)) AS avg_tip_rate
+FROM
+  ${ref('fact_trip')}
+GROUP BY
+  1
+ORDER BY
+  1
